@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./App.css";
 import ConnectMetaMask from "./components/ConnectMetaMask";
 import { Address } from "./types/types";
@@ -11,6 +11,10 @@ function App() {
   const [provider, setProvider] = React.useState<
     providers.Web3Provider | undefined
   >(undefined);
+  const [dowgoContractAddress, setDowgoContractAddress] =
+    React.useState<Address>("0x");
+  const [usdcContractAddress, setUsdcContractAddress] =
+    React.useState<Address>("0x");
   const [currentAccount, setCurrentAccount] = React.useState<Address>("0x");
   const [allowance, setAllowance] = React.useState<BigNumber>(
     BigNumber.from(0)
@@ -29,6 +33,8 @@ function App() {
         {ConnectMetaMask(
           provider,
           setProvider,
+          setDowgoContractAddress,
+          setUsdcContractAddress,
           currentAccount,
           setCurrentAccount
         )}
@@ -41,7 +47,9 @@ function App() {
           setUSDCBalance,
           dowgoBalance,
           setDowgoBalance,
-          setDisplayModal
+          setDisplayModal,
+          dowgoContractAddress,
+          usdcContractAddress
         )}
         {ApproveUSDC(
           provider,
@@ -49,7 +57,9 @@ function App() {
           allowance,
           setAllowance,
           displayModal,
-          setDisplayModal
+          setDisplayModal,
+          dowgoContractAddress,
+          usdcContractAddress
         )}
       </header>
     </div>

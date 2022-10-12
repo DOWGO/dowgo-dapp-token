@@ -1,6 +1,6 @@
 import { BigNumber } from "ethers";
 import Card from "react-bootstrap/Card";
-import { ONE_UNIT } from "../../constants";
+import { ONE_USDC_UNIT } from "../../constants";
 import { SetStateFunction } from "../../types/types";
 
 export const BuyComponent = (
@@ -27,7 +27,7 @@ export const BuyComponent = (
         <button
           type="button"
           onMouseUp={() => {
-            if (buyInput.mul(ONE_UNIT).gt(allowance)) {
+            if (buyInput.mul(price).gt(allowance)) {
               setDisplayModal(true);
             } else {
               buyDowgo();
@@ -37,7 +37,7 @@ export const BuyComponent = (
           Buy Dowgo
         </button>
         <div>{`Cost : ${
-          (Number(buyInput) * Number(price)) / 10 ** 18
+          (Number(buyInput) * Number(price)) / Number(ONE_USDC_UNIT)
         } USDC`}</div>
       </Card.Body>
     </Card>
