@@ -1,4 +1,4 @@
-import { BigNumber } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { useState } from "react";
 import Card from "react-bootstrap/Card";
 import {
@@ -9,6 +9,7 @@ import {
 } from "wagmi";
 import { ONE_DOWGO_UNIT, ONE_USDC_UNIT } from "../../constants";
 import { DowgoERC20ABI } from "../../constants/DowgoERC20ABI";
+import { DowgoERC20 } from "../../types/DowgoERC20";
 import { Address, SetStateFunction } from "../../types/types";
 import useDebounce from "../debounce";
 
@@ -23,14 +24,16 @@ export const BuyComponent = (
   //console.log("price&&allowance",Boolean(price)&&Boolean(allowance),price,allowance)
   const { address: currentAccount } = useAccount();
   console.log("currentAccount", currentAccount);
+  console.log("buyInput",buyInput, "dowgoContractAddress",dowgoContractAddress)
   // BUY
   const {
     config,
     error: prepareError,
     isError: isPrepareError,
+    data:prepareData
   } = usePrepareContractWrite({
-    addressOrName: dowgoContractAddress || "0x",
-    contractInterface: DowgoERC20ABI,
+    address: dowgoContractAddress || "0x",
+    abi: DowgoERC20ABI,
     functionName: "buy_dowgo",
     args: [buyInput.mul(ONE_DOWGO_UNIT)],
     enabled:
@@ -39,12 +42,37 @@ export const BuyComponent = (
       buyInput.mul(price).gt(allowance) &&
       Boolean(debouncedBuyInput) &&
       Boolean(dowgoContractAddress),
+      overrides: {
+        from: currentAccount,
+      }
   });
+  console.log("e", isPrepareError, prepareError);
+  console.log("prepareData",prepareData)
+  console.log("config",config)
   const { data, write, error, isError } = useContractWrite(config);
+  console.log("write",write)
   const { isLoading, isSuccess } = useWaitForTransaction({
     confirmations: 8,
     hash: data?.hash,
   });
+  // async function buyDowgo() {
+  //   //TODO catch errors (like rejection)
+  //   let contract: DowgoERC20 = new ethers.Contract(
+  //     dowgoContractAddress || "0x",
+  //     DowgoERC20ABI,
+  //     provider
+  //   ) as DowgoERC20;
+  //   console.log("buy input", Number(buyInput.mul(ONE_DOWGO_UNIT)));
+  //   provider &&
+  //     (await (
+  //       await contract
+  //         .connect(provider.getSigner())
+  //         .buy_dowgo(buyInput.mul(ONE_UNIT))
+  //     ).wait(8));
+  //   console.log("allowed");
+  //   updateDowgoBalance(contract, userAddress);
+  //   updateUSDCBalance(userAddress);
+  // }
   console.log("e", error, prepareError);
   // console.log("isLoading",isLoading)
   //TODO: check after comma values

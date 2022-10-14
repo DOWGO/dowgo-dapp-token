@@ -17,8 +17,8 @@ export const SellComponent = (
   const debouncedSellInput = useDebounce(sellInput, 500);
 
   const { config } = usePrepareContractWrite({
-    addressOrName: dowgoContractAddress || "0x",
-    contractInterface: DowgoERC20ABI,
+    address: dowgoContractAddress || "0x",
+    abi: DowgoERC20ABI,
     functionName: "sell_dowgo",
     args: [sellInput.mul(ONE_DOWGO_UNIT)],
     enabled: Boolean(sellInput) && Boolean(dowgoContractAddress),

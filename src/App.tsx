@@ -30,26 +30,26 @@ function App() {
   } = useContractReads({
     contracts: [
       {
-        addressOrName: usdcContractAddress,
-        contractInterface: ERC20_ABI,
+        address: usdcContractAddress,
+        abi: ERC20_ABI,
         functionName: "allowance",
         args: [currentAccount, dowgoContractAddress],
       },
       {
-        addressOrName: usdcContractAddress,
-        contractInterface: ERC20_ABI,
+        address: usdcContractAddress,
+        abi: ERC20_ABI,
         functionName: "balanceOf",
         args: [currentAccount],
       },
       {
-        addressOrName: dowgoContractAddress,
-        contractInterface: DowgoERC20ABI,
+        address: dowgoContractAddress,
+        abi: DowgoERC20ABI,
         functionName: "balanceOf",
         args: [currentAccount],
       },
       {
-        addressOrName: dowgoContractAddress,
-        contractInterface: DowgoERC20ABI,
+        address: dowgoContractAddress,
+        abi: DowgoERC20ABI,
         functionName: "currentPrice",
       },
     ],
@@ -58,6 +58,7 @@ function App() {
       Boolean(dowgoContractAddress) &&
       Boolean(usdcContractAddress),
   });
+  console.log("results",results)
 
   const [allowance, usdcBalance, dowgoBalance, price]: (
     | BigNumber

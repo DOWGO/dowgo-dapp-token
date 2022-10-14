@@ -41,8 +41,8 @@ function ApproveUSDC(
     isError: isPrepareError,
     error: prepareError,
   } = usePrepareContractWrite({
-    addressOrName: usdcContractAddress,
-    contractInterface: ERC20_ABI,
+    address: usdcContractAddress,
+    abi: ERC20_ABI,
     functionName: "approve",
     args: [dowgoContractAddress, ONE_USDC_UNIT.mul(100)],//INFINITE_ALLOWANCE],
     enabled: Boolean(dowgoContractAddress) && Boolean(usdcContractAddress),
