@@ -4,8 +4,8 @@ import DowgoBalance from "./DowgoBalance";
 import USDCBalance from "./USDCBalance";
 
 export const BalancePanel = (
-  dowgoBalance: BigNumber,
-  usdcBalance: BigNumber
+  dowgoBalance: BigNumber | undefined,
+  usdcBalance: BigNumber | undefined
 ) => {
   return (
     <Card style={{ width: "80vw", marginLeft: "10vw" }}>
@@ -13,8 +13,8 @@ export const BalancePanel = (
       <Card.Body>
         <Card.Title></Card.Title>
         <div>
-          {DowgoBalance(dowgoBalance)}
-          {USDCBalance(usdcBalance)}
+          {dowgoBalance && DowgoBalance(dowgoBalance)}
+          {usdcBalance && USDCBalance(usdcBalance)}
         </div>
       </Card.Body>
     </Card>

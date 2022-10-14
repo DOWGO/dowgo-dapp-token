@@ -1,61 +1,96 @@
 import React, { useEffect } from "react";
-import "./App.css";
-import ConnectMetaMask from "./components/ConnectMetaMask";
-import { Address } from "./types/types";
+import { useAccount, useContractReads, useNetwork } from "wagmi";
 import { BigNumber, providers } from "ethers";
+
+import "./App.css";
+import { Address } from "./types/types";
 import DowgoContract from "./components/DowgoView";
 import ApproveUSDC from "./components/ApproveUSDC";
 import { BalancePanel } from "./components/BalanceView";
+import ProfileBar from "./components/ProfileBar";
+import { ERC20_ABI } from "./constants/ERC20ABI";
+import { DowgoERC20ABI } from "./constants/DowgoERC20ABI";
+import { getDowgoAddress, getUSDCAddress } from "./constants/contractAddresses";
 
 function App() {
-  const [provider, setProvider] = React.useState<
-    providers.Web3Provider | undefined
-  >(undefined);
   const [dowgoContractAddress, setDowgoContractAddress] =
     React.useState<Address>("0x");
   const [usdcContractAddress, setUsdcContractAddress] =
     React.useState<Address>("0x");
-  const [currentAccount, setCurrentAccount] = React.useState<Address>("0x");
-  const [allowance, setAllowance] = React.useState<BigNumber>(
-    BigNumber.from(0)
-  );
-  const [dowgoBalance, setDowgoBalance] = React.useState<BigNumber>(
-    BigNumber.from(0)
-  );
-  const [usdcBalance, setUSDCBalance] = React.useState<BigNumber>(
-    BigNumber.from(0)
-  );
   const [displayModal, setDisplayModal] = React.useState<boolean>(false);
 
+  const { chain: currentChain } = useNetwork();
+  const { address: currentAccount } = useAccount();
+  console.log("currentacc", currentAccount);
+  const {
+    data: results,
+    isError,
+    error,
+    isLoading,
+  } = useContractReads({
+    contracts: [
+      {
+        addressOrName: usdcContractAddress,
+        contractInterface: ERC20_ABI,
+        functionName: "allowance",
+        args: [currentAccount, dowgoContractAddress],
+      },
+      {
+        addressOrName: usdcContractAddress,
+        contractInterface: ERC20_ABI,
+        functionName: "balanceOf",
+        args: [currentAccount],
+      },
+      {
+        addressOrName: dowgoContractAddress,
+        contractInterface: DowgoERC20ABI,
+        functionName: "balanceOf",
+        args: [currentAccount],
+      },
+      {
+        addressOrName: dowgoContractAddress,
+        contractInterface: DowgoERC20ABI,
+        functionName: "currentPrice",
+      },
+    ],
+    enabled:
+      Boolean(currentAccount) &&
+      Boolean(dowgoContractAddress) &&
+      Boolean(usdcContractAddress),
+  });
+
+  const [allowance, usdcBalance, dowgoBalance, price]: (
+    | BigNumber
+    | undefined
+  )[] =
+    results && results[0] && results[1] && results[2] && results[3]
+      ? results.map((res) => BigNumber.from(res))
+      : [undefined, undefined, undefined, undefined];
+  console.log("allowance", allowance);
+  console.log("error loading reads", error);
+
+  useEffect(() => {
+    if (currentChain?.id) {
+      setDowgoContractAddress(getDowgoAddress(currentChain.id));
+      setUsdcContractAddress(getUSDCAddress(currentChain.id));
+    }
+  }, [currentChain, setDowgoContractAddress, setUsdcContractAddress]);
   return (
     <div className="App">
       <header>
-        {ConnectMetaMask(
-          provider,
-          setProvider,
-          setDowgoContractAddress,
-          setUsdcContractAddress,
-          currentAccount,
-          setCurrentAccount
-        )}
+        {ProfileBar()}
         {BalancePanel(dowgoBalance, usdcBalance)}
         {DowgoContract(
-          provider,
-          currentAccount,
           allowance,
           usdcBalance,
-          setUSDCBalance,
           dowgoBalance,
-          setDowgoBalance,
+          price,
           setDisplayModal,
           dowgoContractAddress,
           usdcContractAddress
         )}
         {ApproveUSDC(
-          provider,
-          currentAccount,
           allowance,
-          setAllowance,
           displayModal,
           setDisplayModal,
           dowgoContractAddress,
