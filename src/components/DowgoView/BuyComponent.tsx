@@ -23,7 +23,7 @@ export const BuyComponent = (
   chainId: ChainId | undefined,
   price: BigNumber,
   allowance: BigNumber,
-  setDisplayModal: SetStateFunction<boolean>,
+  setDisplayApproveModal: SetStateFunction<boolean>,
   updateContractInfo: (
     _chainId: ChainId,
     _contractAddresses: ContractAddresses | undefined
@@ -72,7 +72,7 @@ export const BuyComponent = (
             type="button"
             onMouseUp={() => {
               if (buyInput.mul(price).gt(allowance)) {
-                setDisplayModal(true);
+                setDisplayApproveModal(true);
               } else {
                 buyDowgo();
               }

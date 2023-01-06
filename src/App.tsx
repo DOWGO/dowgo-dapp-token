@@ -4,7 +4,7 @@ import ConnectMetaMask from "./components/ConnectMetaMask/ConnectMetaMask";
 import { EthAddress, ChainId, ContractAddresses } from "./types/types";
 import { BigNumber, providers } from "ethers";
 import DowgoContract from "./components/DowgoView";
-import ApproveUSDC from "./components/ApproveUSDC";
+import ApproveUSDC from "./components/modals/ApproveUSDCModal";
 import { BalancePanel } from "./components/BalanceView";
 import HomeMetrics from "./components/home-metrics/home-metrics.component";
 import HomeFund from "./components/home-fund/home-fund.component";
@@ -15,6 +15,7 @@ import DowgoLogo from "./assets/header/dowgo-logo.png";
 
 import "./App.css";
 import { getContractAddresses } from "./constants/contractAddresses";
+import KYCModal from "./components/modals/KYCModal";
 
 export function DowgoDApp() {
   const { Header, Footer, Content } = Layout;
@@ -34,7 +35,9 @@ export function DowgoDApp() {
     BigNumber.from(0)
   );
   const [price, setPrice] = React.useState<BigNumber>(BigNumber.from(0));
-  const [displayModal, setDisplayModal] = React.useState<boolean>(false);
+  const [displayApproveModal, setDisplayApproveModal] =
+    React.useState<boolean>(false);
+  const [displayKYCModal, setDisplayKYCModal] = React.useState<boolean>(false);
 
   // Contract addresses
   const [contractAddresses, setContractAddresses] = React.useState<
@@ -60,7 +63,8 @@ export function DowgoDApp() {
             currentAccount,
             setCurrentAccount,
             chainId,
-            setChainId
+            setChainId,
+            setDisplayKYCModal
           )}
           <div className="dowgo-logo-container">
             <img src={DowgoLogo} alt="dowgo-logo" className="dowgo-logo-menu" />
@@ -109,7 +113,7 @@ export function DowgoDApp() {
             setUSDCBalance,
             dowgoBalance,
             setDowgoBalance,
-            setDisplayModal,
+            setDisplayApproveModal,
             chainId,
             price,
             setPrice,
@@ -124,10 +128,11 @@ export function DowgoDApp() {
             currentAccount,
             allowance,
             setAllowance,
-            displayModal,
-            setDisplayModal,
+            displayApproveModal,
+            setDisplayApproveModal,
             contractAddresses
           )}
+          {KYCModal(displayKYCModal, setDisplayKYCModal)}
         </Content>
         <Footer className=""></Footer>
       </Layout>

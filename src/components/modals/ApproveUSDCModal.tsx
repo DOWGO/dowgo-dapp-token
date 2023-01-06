@@ -7,13 +7,13 @@ import {
   SetStateFunction,
   TxStatus,
   ContractAddresses,
-} from "../types/types";
-import { ERC20_ABI } from "../constants/ERC20ABI";
-import { ERC20 } from "../types/ERC20";
-import { INFINITE_ALLOWANCE } from "../constants";
-import { DButton } from "./displayComponents/Button";
-import { DisplayTxStatus } from "./displayComponents/DisplayTxStatus";
-import { launchTxWithStatus } from "../utils/txWithStatus";
+} from "../../types/types";
+import { ERC20_ABI } from "../../constants/ERC20ABI";
+import { ERC20 } from "../../types/ERC20";
+import { INFINITE_ALLOWANCE } from "../../constants";
+import { DButton } from "../displayComponents/Button";
+import { DisplayTxStatus } from "../displayComponents/DisplayTxStatus";
+import { launchTxWithStatus } from "../../utils/txWithStatus";
 
 async function getAllowance(
   contract: ERC20,
@@ -32,8 +32,8 @@ function ApproveUSDC(
   userEthAddress: EthAddress,
   allowance: BigNumber,
   setAllowance: SetStateFunction<BigNumber>,
-  displayModal: boolean,
-  setDisplayModal: SetStateFunction<boolean>,
+  displayApproveModal: boolean,
+  setDisplayApproveModal: SetStateFunction<boolean>,
   contractAddresses: ContractAddresses | undefined
 ) {
   const [txStatus, setTxStatus] = useState<TxStatus | undefined>(undefined);
@@ -53,7 +53,7 @@ function ApproveUSDC(
             .connect(provider.getSigner())
             .approve(contractAddresses?.dowgoAddress, INFINITE_ALLOWANCE),
         () => {
-          setDisplayModal(false);
+          setDisplayApproveModal(false);
           getAllowance(
             contract,
             userEthAddress,
@@ -80,10 +80,17 @@ function ApproveUSDC(
         contractAddresses?.dowgoAddress
       );
     }
-  }, [provider, userEthAddress, chainId, setAllowance,contractAddresses]);
-  const handleClose = () => setDisplayModal(false);
+  }, [provider, userEthAddress, chainId, setAllowance, contractAddresses]);
+  const handleClose = () => setDisplayApproveModal(false);
   return (
-    <Modal open={displayModal} closable={true} title="Approve USDC Spendings">
+    <Modal
+      open={displayApproveModal}
+      onCancel={handleClose}
+      closable={true}
+      title="Approve USDC Spendings"
+      okText= "Approve USDC transfer to Dowgo Contract"
+      onOk={approveUSDCToDowgo}
+    >
       <div>
         {allowance.toHexString() === INFINITE_ALLOWANCE
           ? `Allowance to Dowgo Contract : Infinite`
@@ -98,8 +105,6 @@ function ApproveUSDC(
         message="You need to Approve USDC Spendings to the Dowgo Contract before you can buy Dowgo token."
       />
       {txStatus && chainId && DisplayTxStatus(txStatus, chainId)}
-      {DButton(handleClose, `Close`)}
-      {DButton(approveUSDCToDowgo, `Approve USDC transfer to Dowgo Contract`)}
     </Modal>
   );
 }

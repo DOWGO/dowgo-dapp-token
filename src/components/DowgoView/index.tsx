@@ -26,7 +26,7 @@ function DowgoContract(
   setUSDCBalance: SetStateFunction<BigNumber>,
   dowgoBalance: BigNumber,
   setDowgoBalance: SetStateFunction<BigNumber>,
-  setDisplayModal: SetStateFunction<boolean>,
+  setDisplayApproveModal: SetStateFunction<boolean>,
   chainId: ChainId | undefined,
   price: BigNumber,
   setPrice: SetStateFunction<BigNumber>,
@@ -170,7 +170,7 @@ function DowgoContract(
             chainId,
             price,
             allowance,
-            setDisplayModal,
+            setDisplayApproveModal,
             updateContractInfo,
             contractAddresses
           )}

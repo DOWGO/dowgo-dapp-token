@@ -15,6 +15,7 @@ import { ALLOWED_NETWORKS } from "../../constants";
 
 //icons import
 import { ReactComponent as ProfileIcon } from "../../assets/header/profile-icon.svg";
+import { ReactComponent as MetamaskIcon } from "../../assets/header/metamask.svg";
 
 import "./header-animation";
 
@@ -25,9 +26,9 @@ function ConnectMetaMask(
   setProvider: SetStateFunction<providers.Web3Provider | undefined>,
   currentAccount: EthAddress,
   setCurrentAccount: SetStateFunction<EthAddress>,
-
   chainId: ChainId | undefined,
-  setChainId: SetStateFunction<ChainId | undefined>
+  setChainId: SetStateFunction<ChainId | undefined>,
+  setDisplayKYCModal: SetStateFunction<boolean>
 ) {
   const [status, setStatus] = React.useState<ConnectMMStatus>("Disconnected");
 
@@ -214,10 +215,23 @@ function ConnectMetaMask(
           </Menu.Item>
         </Menu.SubMenu>
         <Menu.Item key="trois" className="">
-          {provider &&
-            DButton(() => {
-              connect(window.ethereum as MetaMaskInpageProvider);
-            }, `Connect to MetaMask`)}
+          {provider && status === "Connected"
+            ? DButton(() => {
+                setDisplayKYCModal(true);
+              }, `Start KYC`)
+            : DButton(
+                () => {
+                  connect(window.ethereum as MetaMaskInpageProvider);
+                },
+                `Connect to MetaMask`,
+                <MetamaskIcon
+                  style={{
+                    height: 20,
+                    width: "auto",
+                    marginLeft: 10,
+                  }}
+                />
+              )}
         </Menu.Item>
       </Menu>
     </div>
