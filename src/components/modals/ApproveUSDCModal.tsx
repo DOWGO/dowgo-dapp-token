@@ -88,7 +88,7 @@ function ApproveUSDC(
       onCancel={handleClose}
       closable={true}
       title="Approve USDC Spendings"
-      okText= "Approve USDC transfer to Dowgo Contract"
+      okText="Approve USDC transfer to Dowgo Contract"
       onOk={approveUSDCToDowgo}
     >
       <div>
