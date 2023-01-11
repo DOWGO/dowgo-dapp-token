@@ -1,32 +1,25 @@
-import { BigNumber, ethers, providers } from "ethers";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Modal, Alert, Steps, Button, message } from "antd";
-import { createVeriffFrame } from "@veriff/incontext-sdk";
-import {
-  EthAddress,
-  ChainId,
-  SetStateFunction,
-  TxStatus,
-  ContractAddresses,
-} from "../../types/types";
-import { ERC20_ABI } from "../../constants/ERC20ABI";
-import { ERC20 } from "../../types/ERC20";
-import { INFINITE_ALLOWANCE } from "../../constants";
-import { DButton } from "../displayComponents/Button";
-import { DisplayTxStatus } from "../displayComponents/DisplayTxStatus";
-import { launchTxWithStatus } from "../../utils/txWithStatus";
+import { SetStateFunction } from "../../types/types";
 import VeriffPage from "./KYCPages/VeriffPage";
 import CustomerProfilePage from "./KYCPages/CustomerProfilePage";
 import FinancialProfilePage from "./KYCPages/FinancialProfilePage";
-const Veriff = require("@veriff/js-sdk");
+import {
+  CustomerProfileData,
+  FinancialProfileData,
+} from "../../constants/kycInformation";
 
 function KYCModal(
   displayKYCModal: boolean,
   setDisplayKYCModal: SetStateFunction<boolean>
 ) {
-  const [current, setCurrent] = useState(0);
-  const [customerProfile, setCustomerProfile] = useState({});
-  const [financialProfile, setFinancialProfile] = useState({});
+  const [current, setCurrent] = useState(1);
+  const [customerProfile, setCustomerProfile] = useState<
+    CustomerProfileData | undefined
+  >(undefined);
+  const [financialProfile, setFinancialProfile] = useState<
+    FinancialProfileData | undefined
+  >(undefined);
   const handleClose = () => setDisplayKYCModal(false);
   const next = () => {
     setCurrent(current + 1);

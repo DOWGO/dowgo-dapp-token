@@ -1,5 +1,6 @@
-import React from "react";
-import { Button, Checkbox, Form, Input } from "antd";
+import { Button, DatePicker, Form, Input, Select } from "antd";
+import { financialProfileData } from "../../../constants/kycInformation";
+import _ from "lodash";
 
 function FinancialProfilePage(
   onNext2: (values: any) => void,
@@ -24,22 +25,46 @@ function FinancialProfilePage(
       onFinishFailed={onFinishFailed}
       autoComplete="off"
     >
-      <Form.Item
-        label="Investible / Liquid Assets"
-        name="invLiqAssets"
-        rules={[{ required: true, message: "Please input your first name!" }]}
-      >
-        <Input />
-      </Form.Item>
-      {/* 
-      <Form.Item
-        label="LastName"
-        name="lastName"
-        rules={[{ required: true, message: 'Please input your last name!' }]}
-      >
-        <Input.Password />
-      </Form.Item> */}
-
+      {financialProfileData.map((input) => {
+        return (
+          <Form.Item
+            label={input.label}
+            name={_.camelCase(input.label)}
+            rules={
+              input.inputDataType === "email"
+                ? [
+                    {
+                      required: true,
+                      message: `Please input your ${input.label}!`,
+                      type: "email",
+                    },
+                  ]
+                : [
+                    {
+                      required: true,
+                      message: `Please input your ${input.label}!`,
+                    },
+                  ]
+            }
+          >
+            {input.inputDataType === "string" ||
+            input.inputDataType === "email" ? (
+              <Input />
+            ) : input.inputDataType === "date" ? (
+              <DatePicker />
+            ) : (
+              <Select>
+                {input.options &&
+                  input.options.map((option) => {
+                    return (
+                      <Select.Option value={option}>{option}</Select.Option>
+                    );
+                  })}
+              </Select>
+            )}
+          </Form.Item>
+        );
+      })}
       <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
         <Button style={{ margin: "0 8px" }} onClick={onBack}>
           Previous

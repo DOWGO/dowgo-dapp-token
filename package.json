@@ -19,6 +19,7 @@
     "axios": "^1.2.1",
     "ethers": "^5.6.8",
     "jquery": "^3.6.1",
+    "lodash": "^4.17.21",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-router-dom": "^6.4.3",
@@ -64,6 +65,7 @@
     "url": "https://github.com/joelamouche/web3-react-template/issues"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.191",
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.8",
     "gh-pages": "^4.0.0"
