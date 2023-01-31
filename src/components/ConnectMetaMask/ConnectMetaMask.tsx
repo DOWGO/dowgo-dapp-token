@@ -20,6 +20,7 @@ import { ReactComponent as MetamaskIcon } from "../../assets/header/metamask.svg
 import "./header-animation";
 
 import "./ConnectMetaMask.styles.css";
+import axios from "axios";
 
 function ConnectMetaMask(
   provider: providers.Web3Provider | undefined,
@@ -113,7 +114,7 @@ function ConnectMetaMask(
   }
 
   // For now, 'eth_accounts' will continue to always return an array
-  function handleAccountsChanged(accounts: unknown) {
+  async function handleAccountsChanged(accounts: unknown) {
     let accountList: EthAddress[] = [];
     if (accounts && (accounts as string[]).length) {
       accountList = accounts as EthAddress[];
@@ -125,6 +126,9 @@ function ConnectMetaMask(
     } else if (accountList[0] !== currentAccount) {
       setCurrentAccount(accountList[0]);
       setStatus("Connected");
+      await axios.post(
+        "https://211thuucd8.execute-api.eu-west-3.amazonaws.com/latestDeployment"
+      )
     }
   }
 

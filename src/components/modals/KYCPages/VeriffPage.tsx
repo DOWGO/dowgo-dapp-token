@@ -22,7 +22,7 @@ function VeriffComponent(display: boolean) {
   useEffect(() => {
     if (display) {
       const _veriff = Veriff.Veriff({
-        apiKey: "0427ce0c-753e-48e3-90f4-0fe02c5356e2",
+        apiKey: "0427ce0c-753e-48e3-90f4-0fe02c5356e2", //TEST key for veriff
         parentId: "veriff-root",
         onSession: function (err: any, response: any) {
           //TODO style reponse with
@@ -39,13 +39,15 @@ function VeriffComponent(display: boolean) {
           // TODO:handle error
           err && console.log("err", err);
           console.log("response", response);
+          // TODO: register verificationID using API to recognize the response
           // incontext sdk
           let _frame = createVeriffFrame({ url: response.verification.url });
           setFrame(_frame);
         },
       });
       _veriff.setParams({
-        vendorData: "0427ce0c-753e-48e3-90f4-0fe02c5356e2",
+        vendorData: "0427ce0c-753e-48e3-90f4-0fe02c5356e2", //TODO use user address instead
+        //TODO: add first name and last name
       });
 
       _veriff.mount();
