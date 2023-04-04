@@ -59,7 +59,7 @@ export const NotWhitelistedOverlay = () => {
           <div>Please fill this form to get whitelisted.</div>
           <div>Optionally, add Email and Country to stay in touch.</div>
         </div>
-        <div style={{ marginTop: "40px" }}>
+        <form onSubmit={onSubmit} style={{ marginTop: "40px" }}>
           <div className="dowgo-input-label">Ethereum Public Key*</div>
           <input
             value={ethKey}
@@ -96,9 +96,6 @@ export const NotWhitelistedOverlay = () => {
             }
           >
             {errorMsg}
-            {/* {errorMsg === "Thank you for subscribing! We will send you an email when you are whitelisted."
-                ? "dowgo-success-message"
-                : errorMsg} */}
           </div>
           <div
             style={{
@@ -107,11 +104,11 @@ export const NotWhitelistedOverlay = () => {
               marginTop: "20px",
             }}
           >
-            <button onClick={onSubmit} className="fund-button">
+            <button type="submit" className="fund-button">
               Get Whitelisted
             </button>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   );
